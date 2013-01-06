@@ -1,0 +1,24 @@
+type punt: int;
+type punt: real;
+
+var x:punto;
+var a:int;
+var b:int;
+var a:int;
+
+main() {
+	var c:int;
+	var c:int;
+
+	d = b;
+	f(8);
+}
+
+f(p:int) {
+	var p:int;
+}
+
+type persona: record {
+
+	a:[20] punto;
+};

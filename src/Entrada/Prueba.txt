@@ -1,0 +1,30 @@
+#
+PRUEBA TIPO A
+   NUMERO 3
+#
+
+/*
+   Programa compilable y ejecutable
+*/
+
+
+var global: real;
+
+main () {
+
+    var e, local: int;
+    var r: real;
+    var c: char;
+
+    e = 5;
+    r = 3.2;
+    c = 'C';
+
+    global = e + r;
+
+    write global;
+
+    local = -3 + 57 % cast<int> (c);
+
+    write local;
+}

@@ -1,0 +1,139 @@
+
+              ##################################
+              ###                            ###
+              ###  PROGRAMA DE DEMOSTRACIÓN  ###
+              ###                            ###
+              ###    DAMIÁN GARCÍA GARCÍA    ###
+              ###                            ###
+              ##################################
+
+/* El siguiente programa de ejemplo muestra todas las
+   posibilidades ofrecidas por el lenguaje implementado */
+
+// Comentarios mediante //, /* */ y # #
+
+# Declaración de variables globales #
+
+// De tipo simple: entero, real y char/byte
+
+var e1: int;
+var r1, r2: real; // Declaración múltiple de variables separadas por comas
+var c1: char;
+var c2: byte;
+
+// De tipo complejo: arrays, arrays multidimensionales y registros
+
+var array: [20] int;
+var mat: [10] [10] real;
+
+var reg: record {
+
+    atrib1: int;
+    atrib2: char;
+
+    atrib3: record {
+
+       subatrib1: real;
+       subatrib2: real;
+    };
+};
+
+/* Declaración de tipos construidos por el usuario */
+
+type complejo: record {
+
+    parteReal: real;
+    parteImag: real;
+};
+
+var listaComplejos: [10] complejo; // Variables globales
+
+# Definición de funciones #
+
+// Procedimientos (funciones de tipo void)
+
+MostrarDatos (r: real, i: real) {
+
+    write r, i; // Sentencias de escritura
+}
+
+// Con paso de parámetros por valor
+
+MayorQueCero (valor: int): int {
+
+    if (valor > 0) { // Sentencias if
+
+       return 1;
+    }
+
+    return 0;
+}
+
+// Con paso de parámetros por referencia (sólo arrays y registros)
+
+EntradaDatos (c: complejo) {
+
+    read c.parteReal, c.parteImag; // Sentencias de lectura
+}
+
+main () {
+
+    // Definición de variables locales de una función
+    // (siempre se definirán al comienzo de ésta)
+
+    var aux, c1, c2: complejo;
+    var conta: int;
+    var r3: real;
+    var ch: byte;
+
+    conta = 0; // Asignaciones
+
+    // Sentencias while
+
+    while (conta < 2) { // Operadores de comparación
+
+       /* Llamadas a funciones */
+
+       EntradaDatos (aux);
+
+       if (! MayorQueCero(conta)) { # Operador ! #
+
+           c1.parteReal = aux.parteReal;
+
+           c1.parteImag = aux.parteImag;
+       }
+
+       else { // Sentencias else
+
+           c2.parteReal = aux.parteReal;
+
+           c2.parteImag = aux.parteImag;
+       }
+
+       conta = conta + 1; // Operadores aritméticos
+    }
+
+    r1 = c1.parteReal * c2.parteReal;
+
+    if (c2.parteImag == 0) {
+
+       r2 = -1;
+    }
+
+    else {
+
+       r2 = c1.parteImag / c2.parteImag;
+    }
+
+    r3 = conta; // Conversión implícita de tipos
+
+    MostrarDatos (r3, r2);
+
+    array [3] = 5; // Asignación de valores a posiciones de arrays
+
+    /* Conversión explícita de tipos */
+
+    ch = cast <char> (conta);
+}
+
+

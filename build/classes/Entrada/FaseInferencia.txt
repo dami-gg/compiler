@@ -1,0 +1,21 @@
+
+type mapa:[10] int;
+
+type map:mapa;
+
+type ma:map;
+
+type m:ma;
+
+funcion():int
+{
+    var local:m;
+    return 7 * local;
+}
+
+main()
+{
+    var v :int;
+
+    v = funcion();
+}

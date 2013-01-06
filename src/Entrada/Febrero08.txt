@@ -1,0 +1,139 @@
+var b: char;
+
+typedef mapa: [3] int;
+typedef Entero: int;
+
+var c: mapa;
+
+typedef Edad: record {
+
+   edad: int;
+};
+
+var e: Edad;
+
+typedef Persona: record {
+
+   edad: int;
+};
+
+var personas: [2] Persona;
+
+typedef Empresa: record {
+
+   empleados: [2] Persona;
+};
+
+var acme: [2] Empresa;
+
+//------------------
+
+doble (a: int, b: Entero) : real {
+
+   var local: int;
+   local = a + b;
+   return local * 2.0;
+}
+
+edad (p: Persona) {
+
+   write p.edad, ' ';
+}
+
+//------------------
+rellenar (v: [0] int, min: int, max: int) {
+
+   var i: int;
+
+   i = min;
+   while (i <= max) {
+
+      v[i] = i;
+      i = i + 1;
+   }
+
+   write '\n';
+}
+
+//------------------
+mostrar (v: [0] int, min: int, max: int) {
+
+   var i: int;
+
+   i = min;
+   while (i <= max) {
+
+      write v[i];
+      i = i + 1;
+   }
+
+   write '\n';
+}
+
+//------------------
+
+main () {
+
+   var la: int;
+   var lb: double;
+   var lc, ld: int;
+   var i, j: int;
+   var v: [5] int;
+
+
+   la = 56;
+   lb = doble (la, 2);
+   lc = 85;
+   ld = la * 2;
+
+   // Salida: 56 116.0 85 112
+   write la, lb, lc, ld, '\n';
+
+   b = '0';
+   c[2] = b;
+   e.edad = doble (b, b);
+   personas[1].edad = doble (b, b); 
+   acme[1].empleados[1].edad = 56;
+
+   // Salida: 0 48 192 192 56
+   write b, c[2], e.edad, personas[1].edad, acme[1].empleados[1].edad, '\n';
+
+   i = 0;
+   while (i < 2) {
+
+     j = 0;
+     while (j < 2) {
+
+        acme[i].empleados[j].edad = i + j;
+        j = j + 1;
+     }
+
+     i = i + 1;
+   }
+
+   i = 0;
+   while (i < 2) {
+
+     j = 0;
+     while (j < 2) {
+
+        // Salida: 0 1 1 2
+        edad (acme[i].empleados[j]);
+        j = j + 1;
+     }
+
+     i = i + 1;
+   }
+   write '\n';
+
+   rellenar (v, 0, 4);
+
+   // Salida: 0 1 2 3 4
+   mostrar (v, 0, 4);
+
+   rellenar (w, -5, 5);
+
+   // Salida: -5 -4 -3 -2 -1 0 1 2 3 4 5
+   mostrar (w, -5, 5);
+}
+

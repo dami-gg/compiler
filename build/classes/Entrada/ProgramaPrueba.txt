@@ -1,0 +1,84 @@
+#
+PRUEBA TIPO A
+   NUMERO 2
+#
+
+/*
+   Programa compilable y ejecutable
+*/
+
+type datosCjto: record {
+
+   valorMax: real;
+   valorMin: real;
+};
+
+var resultado: datosCjto;
+
+var tamCjto: int;
+
+/* Funcion que calcula el valor maximo y el
+   minimo del array que recibe como parametro,
+   almacenandolos en la estructura pasada
+   tambien como parametro.
+   Los dos parametros se pasan por referencia */
+
+CalculoValores (conjunto: [0] real, d: datosCjto) {
+
+   var max, min: real;
+
+   var cursor: int;
+
+   max = conjunto[0];
+
+   min = max;
+
+   cursor = 1;
+
+   while (cursor < tamCjto) {
+
+      if (conjunto[cursor] > max) {
+
+         max = conjunto[cursor];
+      }
+
+      else {
+
+         if (conjunto[cursor] < min) {
+
+            min = conjunto[cursor];
+         }
+      }
+
+      cursor = cursor + 1;
+   }
+
+   d.valorMax = max;
+
+   d.valorMin = min;
+}
+
+main() {
+
+   var array: [5] real;
+
+   var aux: real;
+
+   tamCjto = 5;
+
+   read aux;
+
+   write (aux - 1.2);
+
+   array[0] = 5.2;
+   array[1] = 5.7;
+   array[2] = 19;
+   array[3] = 1.1;
+   array[4] = 0.6;
+
+   CalculoValores (array, resultado);
+
+   write resultado.valorMax;
+
+   write resultado.valorMin;
+}

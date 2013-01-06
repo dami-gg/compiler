@@ -1,0 +1,33 @@
+type punto: record {
+    x:int;
+    y:int;
+};
+
+type entero:int;
+
+type persona:record  {
+	a:[20] entero;
+};
+
+var a:int;
+var b:int;
+
+f(p:int) {
+	var a:int;
+}
+
+main() {
+	var c:int;
+	var p:punto;
+
+	a = b;
+	b = f(8.5);
+	c.x = 10;
+	p.edad = 3;
+}
+
+
+type persona: record {
+
+	a:[20] punto;
+};

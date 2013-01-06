@@ -1,0 +1,2748 @@
+   0  $accept : s $end
+
+   1  s : programa
+
+   2  programa : declaraciones
+
+   3  declaraciones : declaraciones declaracion
+   4                |
+
+   5  declaracion : defVar ';'
+   6              | defTipo
+   7              | defFuncion
+
+   8  defVar : VAR listaIdents ':' tipo
+
+   9  listaIdents : IDENT
+  10              | listaIdents ',' IDENT
+
+  11  defTipo : TYPE IDENT ':' tipo ';'
+
+  12  tipo : tipoPrimitivo
+  13       | array
+
+  14  tipoPrimitivo : INT
+  15                | REAL
+  16                | DOUBLE
+  17                | CHAR
+  18                | BYTE
+  19                | registro
+  20                | IDENT
+
+  21  registro : RECORD '{' atributos '}'
+
+  22  atributos : atributos IDENT ':' tipo ';'
+  23            |
+
+  24  array : dimension tipoPrimitivo
+
+  25  dimension : dimension '[' expr ']'
+  26            | '[' expr ']'
+
+  27  defFuncion : IDENT '(' params ')' tipoRetorno '{' defVarLocal sentencias '}'
+
+  28  tipoRetorno : ':' tipo
+  29              |
+
+  30  defVarLocal : defVarLocal defVar ';'
+  31              |
+
+  32  params : listaParams
+  33         |
+
+  34  listaParams : IDENT ':' tipo
+  35              | listaParams ',' IDENT ':' tipo
+
+  36  sentencias : sentencias sentencia
+  37             |
+
+  38  sentencia : asignacion ';'
+  39            | while
+  40            | if
+  41            | retorno ';'
+  42            | lectura ';'
+  43            | escritura ';'
+  44            | funcion ';'
+
+  45  asignacion : expr '=' expr
+
+  46  retorno : RETURN expr
+
+  47  lectura : READ listaValores
+
+  48  escritura : WRITE listaValores
+
+  49  while : WHILE '(' expr ')' '{' sentencias '}'
+
+  50  if : IF '(' expr ')' '{' sentencias '}' else
+
+  51  else : ELSE '{' sentencias '}'
+  52       |
+
+  53  listaValores : expr
+  54               | listaValores ',' expr
+
+  55  expr : NUM
+  56       | CARACTER
+  57       | IDENT
+  58       | funcion
+  59       | '(' expr ')'
+  60       | expr '[' expr ']'
+  61       | expr '.' IDENT
+  62       | cast
+  63       | exprBinaria
+  64       | exprUnaria
+
+  65  cast : CAST '<' tipo '>' '(' expr ')'
+
+  66  funcion : IDENT '(' listaValoresOpt ')'
+
+  67  listaValoresOpt : listaValores
+  68                  |
+
+  69  exprBinaria : expr '+' expr
+  70              | expr '-' expr
+  71              | expr '*' expr
+  72              | expr '/' expr
+  73              | expr '%' expr
+  74              | expr '<' expr
+  75              | expr '>' expr
+  76              | expr AND expr
+  77              | expr OR expr
+  78              | expr IGUALIGUAL expr
+  79              | expr DISTINTO expr
+  80              | expr MAYOROIGUAL expr
+  81              | expr MENOROIGUAL expr
+
+  82  exprUnaria : '!' expr
+  83             | '-' expr
+
+state 0
+	$accept : . s $end  (0)
+	declaraciones : .  (4)
+
+	.  reduce 4
+
+	s  goto 1
+	programa  goto 2
+	declaraciones  goto 3
+
+
+state 1
+	$accept : s . $end  (0)
+
+	$end  accept
+
+
+state 2
+	s : programa .  (1)
+
+	.  reduce 1
+
+
+state 3
+	programa : declaraciones .  (2)
+	declaraciones : declaraciones . declaracion  (3)
+
+	IDENT  shift 4
+	VAR  shift 5
+	TYPE  shift 6
+	$end  reduce 2
+
+	declaracion  goto 7
+	defVar  goto 8
+	defTipo  goto 9
+	defFuncion  goto 10
+
+
+state 4
+	defFuncion : IDENT . '(' params ')' tipoRetorno '{' defVarLocal sentencias '}'  (27)
+
+	'('  shift 11
+	.  error
+
+
+state 5
+	defVar : VAR . listaIdents ':' tipo  (8)
+
+	IDENT  shift 12
+	.  error
+
+	listaIdents  goto 13
+
+
+state 6
+	defTipo : TYPE . IDENT ':' tipo ';'  (11)
+
+	IDENT  shift 14
+	.  error
+
+
+state 7
+	declaraciones : declaraciones declaracion .  (3)
+
+	.  reduce 3
+
+
+state 8
+	declaracion : defVar . ';'  (5)
+
+	';'  shift 15
+	.  error
+
+
+state 9
+	declaracion : defTipo .  (6)
+
+	.  reduce 6
+
+
+state 10
+	declaracion : defFuncion .  (7)
+
+	.  reduce 7
+
+
+state 11
+	defFuncion : IDENT '(' . params ')' tipoRetorno '{' defVarLocal sentencias '}'  (27)
+	params : .  (33)
+
+	IDENT  shift 16
+	')'  reduce 33
+
+	params  goto 17
+	listaParams  goto 18
+
+
+state 12
+	listaIdents : IDENT .  (9)
+
+	.  reduce 9
+
+
+state 13
+	defVar : VAR listaIdents . ':' tipo  (8)
+	listaIdents : listaIdents . ',' IDENT  (10)
+
+	':'  shift 19
+	','  shift 20
+	.  error
+
+
+state 14
+	defTipo : TYPE IDENT . ':' tipo ';'  (11)
+
+	':'  shift 21
+	.  error
+
+
+state 15
+	declaracion : defVar ';' .  (5)
+
+	.  reduce 5
+
+
+state 16
+	listaParams : IDENT . ':' tipo  (34)
+
+	':'  shift 22
+	.  error
+
+
+state 17
+	defFuncion : IDENT '(' params . ')' tipoRetorno '{' defVarLocal sentencias '}'  (27)
+
+	')'  shift 23
+	.  error
+
+
+state 18
+	params : listaParams .  (32)
+	listaParams : listaParams . ',' IDENT ':' tipo  (35)
+
+	','  shift 24
+	')'  reduce 32
+
+
+state 19
+	defVar : VAR listaIdents ':' . tipo  (8)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 33
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 20
+	listaIdents : listaIdents ',' . IDENT  (10)
+
+	IDENT  shift 38
+	.  error
+
+
+state 21
+	defTipo : TYPE IDENT ':' . tipo ';'  (11)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 39
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 22
+	listaParams : IDENT ':' . tipo  (34)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 40
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 23
+	defFuncion : IDENT '(' params ')' . tipoRetorno '{' defVarLocal sentencias '}'  (27)
+	tipoRetorno : .  (29)
+
+	':'  shift 41
+	'{'  reduce 29
+
+	tipoRetorno  goto 42
+
+
+state 24
+	listaParams : listaParams ',' . IDENT ':' tipo  (35)
+
+	IDENT  shift 43
+	.  error
+
+
+state 25
+	dimension : '[' . expr ']'  (26)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 51
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 26
+	tipoPrimitivo : IDENT .  (20)
+
+	.  reduce 20
+
+
+state 27
+	registro : RECORD . '{' atributos '}'  (21)
+
+	'{'  shift 56
+	.  error
+
+
+state 28
+	tipoPrimitivo : INT .  (14)
+
+	.  reduce 14
+
+
+state 29
+	tipoPrimitivo : REAL .  (15)
+
+	.  reduce 15
+
+
+state 30
+	tipoPrimitivo : DOUBLE .  (16)
+
+	.  reduce 16
+
+
+state 31
+	tipoPrimitivo : CHAR .  (17)
+
+	.  reduce 17
+
+
+state 32
+	tipoPrimitivo : BYTE .  (18)
+
+	.  reduce 18
+
+
+state 33
+	defVar : VAR listaIdents ':' tipo .  (8)
+
+	.  reduce 8
+
+
+state 34
+	tipo : tipoPrimitivo .  (12)
+
+	.  reduce 12
+
+
+state 35
+	tipo : array .  (13)
+
+	.  reduce 13
+
+
+state 36
+	tipoPrimitivo : registro .  (19)
+
+	.  reduce 19
+
+
+state 37
+	array : dimension . tipoPrimitivo  (24)
+	dimension : dimension . '[' expr ']'  (25)
+
+	'['  shift 57
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipoPrimitivo  goto 58
+	registro  goto 36
+
+
+state 38
+	listaIdents : listaIdents ',' IDENT .  (10)
+
+	.  reduce 10
+
+
+state 39
+	defTipo : TYPE IDENT ':' tipo . ';'  (11)
+
+	';'  shift 59
+	.  error
+
+
+state 40
+	listaParams : IDENT ':' tipo .  (34)
+
+	.  reduce 34
+
+
+state 41
+	tipoRetorno : ':' . tipo  (28)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 60
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 42
+	defFuncion : IDENT '(' params ')' tipoRetorno . '{' defVarLocal sentencias '}'  (27)
+
+	'{'  shift 61
+	.  error
+
+
+state 43
+	listaParams : listaParams ',' IDENT . ':' tipo  (35)
+
+	':'  shift 62
+	.  error
+
+
+state 44
+	exprUnaria : '-' . expr  (83)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 63
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 45
+	exprUnaria : '!' . expr  (82)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 64
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 46
+	expr : NUM .  (55)
+
+	.  reduce 55
+
+
+state 47
+	expr : CARACTER .  (56)
+
+	.  reduce 56
+
+
+state 48
+	expr : IDENT .  (57)
+	funcion : IDENT . '(' listaValoresOpt ')'  (66)
+
+	'('  shift 65
+	OR  reduce 57
+	AND  reduce 57
+	IGUALIGUAL  reduce 57
+	DISTINTO  reduce 57
+	'>'  reduce 57
+	'<'  reduce 57
+	MAYOROIGUAL  reduce 57
+	MENOROIGUAL  reduce 57
+	'+'  reduce 57
+	'-'  reduce 57
+	'*'  reduce 57
+	'/'  reduce 57
+	'%'  reduce 57
+	'['  reduce 57
+	'.'  reduce 57
+	';'  reduce 57
+	','  reduce 57
+	']'  reduce 57
+	')'  reduce 57
+	'='  reduce 57
+
+
+state 49
+	cast : CAST . '<' tipo '>' '(' expr ')'  (65)
+
+	'<'  shift 66
+	.  error
+
+
+state 50
+	expr : '(' . expr ')'  (59)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 67
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 51
+	dimension : '[' expr . ']'  (26)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	']'  shift 83
+	.  error
+
+
+state 52
+	expr : funcion .  (58)
+
+	.  reduce 58
+
+
+state 53
+	expr : cast .  (62)
+
+	.  reduce 62
+
+
+state 54
+	expr : exprBinaria .  (63)
+
+	.  reduce 63
+
+
+state 55
+	expr : exprUnaria .  (64)
+
+	.  reduce 64
+
+
+state 56
+	registro : RECORD '{' . atributos '}'  (21)
+	atributos : .  (23)
+
+	.  reduce 23
+
+	atributos  goto 84
+
+
+state 57
+	dimension : dimension '[' . expr ']'  (25)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 85
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 58
+	array : dimension tipoPrimitivo .  (24)
+
+	.  reduce 24
+
+
+state 59
+	defTipo : TYPE IDENT ':' tipo ';' .  (11)
+
+	.  reduce 11
+
+
+state 60
+	tipoRetorno : ':' tipo .  (28)
+
+	.  reduce 28
+
+
+state 61
+	defFuncion : IDENT '(' params ')' tipoRetorno '{' . defVarLocal sentencias '}'  (27)
+	defVarLocal : .  (31)
+
+	.  reduce 31
+
+	defVarLocal  goto 86
+
+
+state 62
+	listaParams : listaParams ',' IDENT ':' . tipo  (35)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 87
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 63
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+	exprUnaria : '-' expr .  (83)
+
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 83
+	AND  reduce 83
+	IGUALIGUAL  reduce 83
+	DISTINTO  reduce 83
+	'>'  reduce 83
+	'<'  reduce 83
+	MAYOROIGUAL  reduce 83
+	MENOROIGUAL  reduce 83
+	'+'  reduce 83
+	'-'  reduce 83
+	';'  reduce 83
+	','  reduce 83
+	']'  reduce 83
+	')'  reduce 83
+	'='  reduce 83
+
+
+state 64
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+	exprUnaria : '!' expr .  (82)
+
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 82
+	AND  reduce 82
+	IGUALIGUAL  reduce 82
+	DISTINTO  reduce 82
+	'>'  reduce 82
+	'<'  reduce 82
+	MAYOROIGUAL  reduce 82
+	MENOROIGUAL  reduce 82
+	'+'  reduce 82
+	'-'  reduce 82
+	'*'  reduce 82
+	'/'  reduce 82
+	'%'  reduce 82
+	';'  reduce 82
+	','  reduce 82
+	']'  reduce 82
+	')'  reduce 82
+	'='  reduce 82
+
+
+state 65
+	funcion : IDENT '(' . listaValoresOpt ')'  (66)
+	listaValoresOpt : .  (68)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	')'  reduce 68
+
+	expr  goto 88
+	funcion  goto 52
+	listaValores  goto 89
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+	listaValoresOpt  goto 90
+
+
+state 66
+	cast : CAST '<' . tipo '>' '(' expr ')'  (65)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 91
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 67
+	expr : '(' expr . ')'  (59)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	')'  shift 92
+	.  error
+
+
+state 68
+	exprBinaria : expr OR . expr  (77)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 93
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 69
+	exprBinaria : expr AND . expr  (76)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 94
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 70
+	exprBinaria : expr IGUALIGUAL . expr  (78)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 95
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 71
+	exprBinaria : expr DISTINTO . expr  (79)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 96
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 72
+	exprBinaria : expr '>' . expr  (75)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 97
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 73
+	exprBinaria : expr '<' . expr  (74)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 98
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 74
+	exprBinaria : expr MAYOROIGUAL . expr  (80)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 99
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 75
+	exprBinaria : expr MENOROIGUAL . expr  (81)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 100
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 76
+	exprBinaria : expr '+' . expr  (69)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 101
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 77
+	exprBinaria : expr '-' . expr  (70)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 102
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 78
+	exprBinaria : expr '*' . expr  (71)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 103
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 79
+	exprBinaria : expr '/' . expr  (72)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 104
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 80
+	exprBinaria : expr '%' . expr  (73)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 105
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 81
+	expr : expr '[' . expr ']'  (60)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 106
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 82
+	expr : expr '.' . IDENT  (61)
+
+	IDENT  shift 107
+	.  error
+
+
+state 83
+	dimension : '[' expr ']' .  (26)
+
+	.  reduce 26
+
+
+state 84
+	registro : RECORD '{' atributos . '}'  (21)
+	atributos : atributos . IDENT ':' tipo ';'  (22)
+
+	IDENT  shift 108
+	'}'  shift 109
+	.  error
+
+
+state 85
+	dimension : dimension '[' expr . ']'  (25)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	']'  shift 110
+	.  error
+
+
+state 86
+	defFuncion : IDENT '(' params ')' tipoRetorno '{' defVarLocal . sentencias '}'  (27)
+	defVarLocal : defVarLocal . defVar ';'  (30)
+	sentencias : .  (37)
+
+	VAR  shift 5
+	'-'  reduce 37
+	'!'  reduce 37
+	NUM  reduce 37
+	CARACTER  reduce 37
+	IDENT  reduce 37
+	WHILE  reduce 37
+	IF  reduce 37
+	WRITE  reduce 37
+	READ  reduce 37
+	RETURN  reduce 37
+	CAST  reduce 37
+	'}'  reduce 37
+	'('  reduce 37
+
+	defVar  goto 111
+	sentencias  goto 112
+
+
+state 87
+	listaParams : listaParams ',' IDENT ':' tipo .  (35)
+
+	.  reduce 35
+
+
+state 88
+	listaValores : expr .  (53)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	';'  reduce 53
+	','  reduce 53
+	')'  reduce 53
+
+
+state 89
+	listaValores : listaValores . ',' expr  (54)
+	listaValoresOpt : listaValores .  (67)
+
+	','  shift 113
+	')'  reduce 67
+
+
+state 90
+	funcion : IDENT '(' listaValoresOpt . ')'  (66)
+
+	')'  shift 114
+	.  error
+
+
+state 91
+	cast : CAST '<' tipo . '>' '(' expr ')'  (65)
+
+	'>'  shift 115
+	.  error
+
+
+state 92
+	expr : '(' expr ')' .  (59)
+
+	.  reduce 59
+
+
+state 93
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr OR expr .  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 77
+	';'  reduce 77
+	','  reduce 77
+	']'  reduce 77
+	')'  reduce 77
+	'='  reduce 77
+
+
+state 94
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr AND expr .  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 76
+	AND  reduce 76
+	';'  reduce 76
+	','  reduce 76
+	']'  reduce 76
+	')'  reduce 76
+	'='  reduce 76
+
+
+state 95
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr IGUALIGUAL expr .  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 78
+	AND  reduce 78
+	IGUALIGUAL  reduce 78
+	DISTINTO  reduce 78
+	';'  reduce 78
+	','  reduce 78
+	']'  reduce 78
+	')'  reduce 78
+	'='  reduce 78
+
+
+state 96
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr DISTINTO expr .  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 79
+	AND  reduce 79
+	IGUALIGUAL  reduce 79
+	DISTINTO  reduce 79
+	';'  reduce 79
+	','  reduce 79
+	']'  reduce 79
+	')'  reduce 79
+	'='  reduce 79
+
+
+state 97
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr '>' expr .  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 75
+	AND  reduce 75
+	IGUALIGUAL  reduce 75
+	DISTINTO  reduce 75
+	'>'  reduce 75
+	'<'  reduce 75
+	MAYOROIGUAL  reduce 75
+	MENOROIGUAL  reduce 75
+	';'  reduce 75
+	','  reduce 75
+	']'  reduce 75
+	')'  reduce 75
+	'='  reduce 75
+
+
+state 98
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr '<' expr .  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 74
+	AND  reduce 74
+	IGUALIGUAL  reduce 74
+	DISTINTO  reduce 74
+	'>'  reduce 74
+	'<'  reduce 74
+	MAYOROIGUAL  reduce 74
+	MENOROIGUAL  reduce 74
+	';'  reduce 74
+	','  reduce 74
+	']'  reduce 74
+	')'  reduce 74
+	'='  reduce 74
+
+
+state 99
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr MAYOROIGUAL expr .  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 80
+	AND  reduce 80
+	IGUALIGUAL  reduce 80
+	DISTINTO  reduce 80
+	'>'  reduce 80
+	'<'  reduce 80
+	MAYOROIGUAL  reduce 80
+	MENOROIGUAL  reduce 80
+	';'  reduce 80
+	','  reduce 80
+	']'  reduce 80
+	')'  reduce 80
+	'='  reduce 80
+
+
+state 100
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+	exprBinaria : expr MENOROIGUAL expr .  (81)
+
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 81
+	AND  reduce 81
+	IGUALIGUAL  reduce 81
+	DISTINTO  reduce 81
+	'>'  reduce 81
+	'<'  reduce 81
+	MAYOROIGUAL  reduce 81
+	MENOROIGUAL  reduce 81
+	';'  reduce 81
+	','  reduce 81
+	']'  reduce 81
+	')'  reduce 81
+	'='  reduce 81
+
+
+state 101
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr '+' expr .  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 69
+	AND  reduce 69
+	IGUALIGUAL  reduce 69
+	DISTINTO  reduce 69
+	'>'  reduce 69
+	'<'  reduce 69
+	MAYOROIGUAL  reduce 69
+	MENOROIGUAL  reduce 69
+	'+'  reduce 69
+	'-'  reduce 69
+	';'  reduce 69
+	','  reduce 69
+	']'  reduce 69
+	')'  reduce 69
+	'='  reduce 69
+
+
+state 102
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr '-' expr .  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 70
+	AND  reduce 70
+	IGUALIGUAL  reduce 70
+	DISTINTO  reduce 70
+	'>'  reduce 70
+	'<'  reduce 70
+	MAYOROIGUAL  reduce 70
+	MENOROIGUAL  reduce 70
+	'+'  reduce 70
+	'-'  reduce 70
+	';'  reduce 70
+	','  reduce 70
+	']'  reduce 70
+	')'  reduce 70
+	'='  reduce 70
+
+
+state 103
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr '*' expr .  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 71
+	AND  reduce 71
+	IGUALIGUAL  reduce 71
+	DISTINTO  reduce 71
+	'>'  reduce 71
+	'<'  reduce 71
+	MAYOROIGUAL  reduce 71
+	MENOROIGUAL  reduce 71
+	'+'  reduce 71
+	'-'  reduce 71
+	'*'  reduce 71
+	'/'  reduce 71
+	'%'  reduce 71
+	';'  reduce 71
+	','  reduce 71
+	']'  reduce 71
+	')'  reduce 71
+	'='  reduce 71
+
+
+state 104
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr '/' expr .  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 72
+	AND  reduce 72
+	IGUALIGUAL  reduce 72
+	DISTINTO  reduce 72
+	'>'  reduce 72
+	'<'  reduce 72
+	MAYOROIGUAL  reduce 72
+	MENOROIGUAL  reduce 72
+	'+'  reduce 72
+	'-'  reduce 72
+	'*'  reduce 72
+	'/'  reduce 72
+	'%'  reduce 72
+	';'  reduce 72
+	','  reduce 72
+	']'  reduce 72
+	')'  reduce 72
+	'='  reduce 72
+
+
+state 105
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr '%' expr .  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	'['  shift 81
+	'.'  shift 82
+	OR  reduce 73
+	AND  reduce 73
+	IGUALIGUAL  reduce 73
+	DISTINTO  reduce 73
+	'>'  reduce 73
+	'<'  reduce 73
+	MAYOROIGUAL  reduce 73
+	MENOROIGUAL  reduce 73
+	'+'  reduce 73
+	'-'  reduce 73
+	'*'  reduce 73
+	'/'  reduce 73
+	'%'  reduce 73
+	';'  reduce 73
+	','  reduce 73
+	']'  reduce 73
+	')'  reduce 73
+	'='  reduce 73
+
+
+state 106
+	expr : expr . '[' expr ']'  (60)
+	expr : expr '[' expr . ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	']'  shift 116
+	.  error
+
+
+state 107
+	expr : expr '.' IDENT .  (61)
+
+	.  reduce 61
+
+
+state 108
+	atributos : atributos IDENT . ':' tipo ';'  (22)
+
+	':'  shift 117
+	.  error
+
+
+state 109
+	registro : RECORD '{' atributos '}' .  (21)
+
+	.  reduce 21
+
+
+state 110
+	dimension : dimension '[' expr ']' .  (25)
+
+	.  reduce 25
+
+
+state 111
+	defVarLocal : defVarLocal defVar . ';'  (30)
+
+	';'  shift 118
+	.  error
+
+
+state 112
+	defFuncion : IDENT '(' params ')' tipoRetorno '{' defVarLocal sentencias . '}'  (27)
+	sentencias : sentencias . sentencia  (36)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	WHILE  shift 119
+	IF  shift 120
+	WRITE  shift 121
+	READ  shift 122
+	RETURN  shift 123
+	CAST  shift 49
+	'}'  shift 124
+	'('  shift 50
+	.  error
+
+	expr  goto 125
+	sentencia  goto 126
+	asignacion  goto 127
+	while  goto 128
+	if  goto 129
+	retorno  goto 130
+	lectura  goto 131
+	escritura  goto 132
+	funcion  goto 133
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 113
+	listaValores : listaValores ',' . expr  (54)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 134
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 114
+	funcion : IDENT '(' listaValoresOpt ')' .  (66)
+
+	.  reduce 66
+
+
+state 115
+	cast : CAST '<' tipo '>' . '(' expr ')'  (65)
+
+	'('  shift 135
+	.  error
+
+
+state 116
+	expr : expr '[' expr ']' .  (60)
+
+	.  reduce 60
+
+
+state 117
+	atributos : atributos IDENT ':' . tipo ';'  (22)
+
+	'['  shift 25
+	IDENT  shift 26
+	RECORD  shift 27
+	INT  shift 28
+	REAL  shift 29
+	DOUBLE  shift 30
+	CHAR  shift 31
+	BYTE  shift 32
+	.  error
+
+	tipo  goto 136
+	tipoPrimitivo  goto 34
+	array  goto 35
+	registro  goto 36
+	dimension  goto 37
+
+
+state 118
+	defVarLocal : defVarLocal defVar ';' .  (30)
+
+	.  reduce 30
+
+
+state 119
+	while : WHILE . '(' expr ')' '{' sentencias '}'  (49)
+
+	'('  shift 137
+	.  error
+
+
+state 120
+	if : IF . '(' expr ')' '{' sentencias '}' else  (50)
+
+	'('  shift 138
+	.  error
+
+
+state 121
+	escritura : WRITE . listaValores  (48)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 88
+	funcion  goto 52
+	listaValores  goto 139
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 122
+	lectura : READ . listaValores  (47)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 88
+	funcion  goto 52
+	listaValores  goto 140
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 123
+	retorno : RETURN . expr  (46)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 141
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 124
+	defFuncion : IDENT '(' params ')' tipoRetorno '{' defVarLocal sentencias '}' .  (27)
+
+	.  reduce 27
+
+
+state 125
+	asignacion : expr . '=' expr  (45)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	'='  shift 142
+	.  error
+
+
+state 126
+	sentencias : sentencias sentencia .  (36)
+
+	.  reduce 36
+
+
+state 127
+	sentencia : asignacion . ';'  (38)
+
+	';'  shift 143
+	.  error
+
+
+state 128
+	sentencia : while .  (39)
+
+	.  reduce 39
+
+
+state 129
+	sentencia : if .  (40)
+
+	.  reduce 40
+
+
+state 130
+	sentencia : retorno . ';'  (41)
+
+	';'  shift 144
+	.  error
+
+
+state 131
+	sentencia : lectura . ';'  (42)
+
+	';'  shift 145
+	.  error
+
+
+state 132
+	sentencia : escritura . ';'  (43)
+
+	';'  shift 146
+	.  error
+
+
+state 133
+	sentencia : funcion . ';'  (44)
+	expr : funcion .  (58)
+
+	';'  shift 147
+	OR  reduce 58
+	AND  reduce 58
+	IGUALIGUAL  reduce 58
+	DISTINTO  reduce 58
+	'>'  reduce 58
+	'<'  reduce 58
+	MAYOROIGUAL  reduce 58
+	MENOROIGUAL  reduce 58
+	'+'  reduce 58
+	'-'  reduce 58
+	'*'  reduce 58
+	'/'  reduce 58
+	'%'  reduce 58
+	'['  reduce 58
+	'.'  reduce 58
+	'='  reduce 58
+
+
+state 134
+	listaValores : listaValores ',' expr .  (54)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	';'  reduce 54
+	','  reduce 54
+	')'  reduce 54
+
+
+state 135
+	cast : CAST '<' tipo '>' '(' . expr ')'  (65)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 148
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 136
+	atributos : atributos IDENT ':' tipo . ';'  (22)
+
+	';'  shift 149
+	.  error
+
+
+state 137
+	while : WHILE '(' . expr ')' '{' sentencias '}'  (49)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 150
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 138
+	if : IF '(' . expr ')' '{' sentencias '}' else  (50)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 151
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 139
+	escritura : WRITE listaValores .  (48)
+	listaValores : listaValores . ',' expr  (54)
+
+	','  shift 113
+	';'  reduce 48
+
+
+state 140
+	lectura : READ listaValores .  (47)
+	listaValores : listaValores . ',' expr  (54)
+
+	','  shift 113
+	';'  reduce 47
+
+
+state 141
+	retorno : RETURN expr .  (46)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	';'  reduce 46
+
+
+state 142
+	asignacion : expr '=' . expr  (45)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	CAST  shift 49
+	'('  shift 50
+	.  error
+
+	expr  goto 152
+	funcion  goto 52
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 143
+	sentencia : asignacion ';' .  (38)
+
+	.  reduce 38
+
+
+state 144
+	sentencia : retorno ';' .  (41)
+
+	.  reduce 41
+
+
+state 145
+	sentencia : lectura ';' .  (42)
+
+	.  reduce 42
+
+
+state 146
+	sentencia : escritura ';' .  (43)
+
+	.  reduce 43
+
+
+state 147
+	sentencia : funcion ';' .  (44)
+
+	.  reduce 44
+
+
+state 148
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	cast : CAST '<' tipo '>' '(' expr . ')'  (65)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	')'  shift 153
+	.  error
+
+
+state 149
+	atributos : atributos IDENT ':' tipo ';' .  (22)
+
+	.  reduce 22
+
+
+state 150
+	while : WHILE '(' expr . ')' '{' sentencias '}'  (49)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	')'  shift 154
+	.  error
+
+
+state 151
+	if : IF '(' expr . ')' '{' sentencias '}' else  (50)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	')'  shift 155
+	.  error
+
+
+state 152
+	asignacion : expr '=' expr .  (45)
+	expr : expr . '[' expr ']'  (60)
+	expr : expr . '.' IDENT  (61)
+	exprBinaria : expr . '+' expr  (69)
+	exprBinaria : expr . '-' expr  (70)
+	exprBinaria : expr . '*' expr  (71)
+	exprBinaria : expr . '/' expr  (72)
+	exprBinaria : expr . '%' expr  (73)
+	exprBinaria : expr . '<' expr  (74)
+	exprBinaria : expr . '>' expr  (75)
+	exprBinaria : expr . AND expr  (76)
+	exprBinaria : expr . OR expr  (77)
+	exprBinaria : expr . IGUALIGUAL expr  (78)
+	exprBinaria : expr . DISTINTO expr  (79)
+	exprBinaria : expr . MAYOROIGUAL expr  (80)
+	exprBinaria : expr . MENOROIGUAL expr  (81)
+
+	OR  shift 68
+	AND  shift 69
+	IGUALIGUAL  shift 70
+	DISTINTO  shift 71
+	'>'  shift 72
+	'<'  shift 73
+	MAYOROIGUAL  shift 74
+	MENOROIGUAL  shift 75
+	'+'  shift 76
+	'-'  shift 77
+	'*'  shift 78
+	'/'  shift 79
+	'%'  shift 80
+	'['  shift 81
+	'.'  shift 82
+	';'  reduce 45
+
+
+state 153
+	cast : CAST '<' tipo '>' '(' expr ')' .  (65)
+
+	.  reduce 65
+
+
+state 154
+	while : WHILE '(' expr ')' . '{' sentencias '}'  (49)
+
+	'{'  shift 156
+	.  error
+
+
+state 155
+	if : IF '(' expr ')' . '{' sentencias '}' else  (50)
+
+	'{'  shift 157
+	.  error
+
+
+state 156
+	while : WHILE '(' expr ')' '{' . sentencias '}'  (49)
+	sentencias : .  (37)
+
+	.  reduce 37
+
+	sentencias  goto 158
+
+
+state 157
+	if : IF '(' expr ')' '{' . sentencias '}' else  (50)
+	sentencias : .  (37)
+
+	.  reduce 37
+
+	sentencias  goto 159
+
+
+state 158
+	sentencias : sentencias . sentencia  (36)
+	while : WHILE '(' expr ')' '{' sentencias . '}'  (49)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	WHILE  shift 119
+	IF  shift 120
+	WRITE  shift 121
+	READ  shift 122
+	RETURN  shift 123
+	CAST  shift 49
+	'}'  shift 160
+	'('  shift 50
+	.  error
+
+	expr  goto 125
+	sentencia  goto 126
+	asignacion  goto 127
+	while  goto 128
+	if  goto 129
+	retorno  goto 130
+	lectura  goto 131
+	escritura  goto 132
+	funcion  goto 133
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 159
+	sentencias : sentencias . sentencia  (36)
+	if : IF '(' expr ')' '{' sentencias . '}' else  (50)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	WHILE  shift 119
+	IF  shift 120
+	WRITE  shift 121
+	READ  shift 122
+	RETURN  shift 123
+	CAST  shift 49
+	'}'  shift 161
+	'('  shift 50
+	.  error
+
+	expr  goto 125
+	sentencia  goto 126
+	asignacion  goto 127
+	while  goto 128
+	if  goto 129
+	retorno  goto 130
+	lectura  goto 131
+	escritura  goto 132
+	funcion  goto 133
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 160
+	while : WHILE '(' expr ')' '{' sentencias '}' .  (49)
+
+	.  reduce 49
+
+
+state 161
+	if : IF '(' expr ')' '{' sentencias '}' . else  (50)
+	else : .  (52)
+
+	ELSE  shift 162
+	'-'  reduce 52
+	'!'  reduce 52
+	NUM  reduce 52
+	CARACTER  reduce 52
+	IDENT  reduce 52
+	WHILE  reduce 52
+	IF  reduce 52
+	WRITE  reduce 52
+	READ  reduce 52
+	RETURN  reduce 52
+	CAST  reduce 52
+	'}'  reduce 52
+	'('  reduce 52
+
+	else  goto 163
+
+
+state 162
+	else : ELSE . '{' sentencias '}'  (51)
+
+	'{'  shift 164
+	.  error
+
+
+state 163
+	if : IF '(' expr ')' '{' sentencias '}' else .  (50)
+
+	.  reduce 50
+
+
+state 164
+	else : ELSE '{' . sentencias '}'  (51)
+	sentencias : .  (37)
+
+	.  reduce 37
+
+	sentencias  goto 165
+
+
+state 165
+	sentencias : sentencias . sentencia  (36)
+	else : ELSE '{' sentencias . '}'  (51)
+
+	'-'  shift 44
+	'!'  shift 45
+	NUM  shift 46
+	CARACTER  shift 47
+	IDENT  shift 48
+	WHILE  shift 119
+	IF  shift 120
+	WRITE  shift 121
+	READ  shift 122
+	RETURN  shift 123
+	CAST  shift 49
+	'}'  shift 166
+	'('  shift 50
+	.  error
+
+	expr  goto 125
+	sentencia  goto 126
+	asignacion  goto 127
+	while  goto 128
+	if  goto 129
+	retorno  goto 130
+	lectura  goto 131
+	escritura  goto 132
+	funcion  goto 133
+	cast  goto 53
+	exprBinaria  goto 54
+	exprUnaria  goto 55
+
+
+state 166
+	else : ELSE '{' sentencias '}' .  (51)
+
+	.  reduce 51
+
+
+45 terminals, 35 nonterminals
+84 grammar rules, 167 states

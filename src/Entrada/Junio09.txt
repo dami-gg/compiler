@@ -1,0 +1,158 @@
+var b: char;
+
+typedef mapa: [3] int;
+typedef Entero: int;
+
+var c: mapa;
+
+typedef Edad: record {
+
+   edad: int;
+};
+
+var e: Edad;
+
+typedef Persona: record {
+
+   edad: int;
+};
+
+var personas: [2] Persona;
+
+typedef Empresa: record {
+
+   empleados: [2] Persona;
+};
+
+var acme: [2] Empresa;
+
+//------------------
+
+doble (a: int, b: Entero) : real {
+
+   var local: int;
+   local = a + b;
+   return local * 2.0;
+}
+
+edad (p: Persona) {
+
+   write p.edad;
+}
+
+//------------------
+rellenar (v: [10] int) {
+
+   var i: int;
+
+   i = 0;
+   while (i < 10) {
+
+      v[i] = i;
+      i = i + 1;
+   }
+}
+
+//------------------
+mostrar (v: [10] int) {
+
+   foreach (int a in v) { // ¿¿¿ var a: int in v ???
+
+       write a;
+   }
+
+   write '\n';
+}
+
+sumatorio (v: [10] int) {
+
+   var sum: int;
+   sum = 0;
+
+   foreach (int b in v) { // ¿¿¿ var b: int in v ???
+
+       sum = sum + b;
+   }
+
+   return sum;
+}
+
+semantico (w: [10] float) {
+
+   c = 3;
+
+   foreach (int c in w) { // Error semántico
+                          // ¿¿¿ var c: int in w ???
+       write a;
+   }
+
+   c = 3; // Error semántico
+
+//------------------
+
+main () {
+
+   var la: int;
+   var lb: double;
+   var lc, ld: int;
+   var i, j: int;
+   var v: [5] int;
+
+   var w: [10] int;
+
+   la = 56;
+   lb = doble (la, 2);
+   lc = 85;
+   ld = la * 2;
+
+   // Salida: 56 116.0 85 112
+   write la, lb, lc, ld, '\n';
+
+   b = '0';
+   c[2] = b;
+   e.edad = doble (b, b);
+   personas[1].edad = cast <int> (doble (b, b));
+   acme[1].empleados[1].edad = 56;
+
+   // Salida: 0 48 192 192 56
+   write b, c[2], e.edad, personas[1].edad, acme[1].empleados[1].edad, '\n';
+
+   i = 0;
+   while (i < 2) {
+
+     j = 0;
+     while (j < 2) {
+
+        acme[i].empleados[j].edad = i + j;
+        j = j + 1;
+     }
+
+     i = i + 1;
+   }
+
+   i = 0;
+   while (i < 2) {
+
+     j = 0;
+     while (j < 2) {
+
+        // Salida: 0 1 1 2
+        edad (acme[i].empleados[j]);
+        j = j + 1;
+     }
+
+     i = i + 1;
+   }
+   write '\n';
+
+   rellenar (w);
+   
+   // Salida: 0 1 2 3 4 5 6 7 8 9
+   mostrar (w);
+
+   // Salida: 45
+   write sumatorio(w), '\n';
+
+
+}
+

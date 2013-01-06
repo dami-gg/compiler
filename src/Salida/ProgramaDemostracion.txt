@@ -1,0 +1,291 @@
+CALL main
+HALT
+
+
+#data e1: int
+
+#data r1: real
+
+#data r2: real
+
+#data c1: char
+
+#data c2: char
+
+#data array: 20*int
+
+#data mat: 10*10*real
+
+#data reg: { 
+	atrib1: int
+	atrib2: char
+	atrib3: { 
+	subatrib1: real
+	subatrib2: real
+}
+}
+
+#type complejo: { 
+	parteReal: real
+	parteImag: real
+}
+
+#data listaComplejos: 10*{ 
+	parteReal: real
+	parteImag: real
+}
+
+#func MostrarDatos
+#param r:real
+#param i:real
+MostrarDatos:
+ENTER 0
+PUSH BP
+PUSHI 8
+ADDI
+LOADF
+OUTF
+PUSH BP
+PUSHI 4
+ADDI
+LOADF
+OUTF
+RET 0, 0, 8
+
+
+#func MayorQueCero
+#ret int
+#param valor:int
+MayorQueCero:
+ENTER 0
+PUSH BP
+PUSHI 4
+ADDI
+LOADI
+PUSHI 0
+GTI
+JZ FinIf0
+PUSHI 1
+RET 2, 0, 2
+
+FinIf0:
+PUSHI 0
+RET 2, 0, 2
+PUSHI 0
+RET 2, 0, 2
+
+
+#func EntradaDatos
+#param c:address
+EntradaDatos:
+ENTER 0
+PUSH BP
+PUSHI 4
+ADDI
+LOADI
+PUSHI 0
+ADDI
+INF
+STOREF
+PUSH BP
+PUSHI 4
+ADDI
+LOADI
+PUSHI 4
+ADDI
+INF
+STOREF
+RET 0, 0, 2
+
+
+#func main
+#local aux: { 
+	parteReal: real
+	parteImag: real
+}
+#local c1: { 
+	parteReal: real
+	parteImag: real
+}
+#local c2: { 
+	parteReal: real
+	parteImag: real
+}
+#local conta: int
+#local r3: real
+#local ch: char
+main:
+ENTER 31
+PUSH BP
+PUSHI -26
+ADDI
+PUSHI 0
+STOREI
+
+While0:
+PUSH BP
+PUSHI -26
+ADDI
+LOADI
+PUSHI 2
+LTI
+JZ FinWhile0
+PUSH BP
+PUSHI -8
+ADDI
+CALL EntradaDatos
+PUSH BP
+PUSHI -26
+ADDI
+LOADI
+CALL MayorQueCero
+NOT
+JZ Else1
+PUSH BP
+PUSHI -16
+ADDI
+PUSHI 0
+ADDI
+PUSH BP
+PUSHI -8
+ADDI
+PUSHI 0
+ADDI
+LOADF
+STOREF
+PUSH BP
+PUSHI -16
+ADDI
+PUSHI 4
+ADDI
+PUSH BP
+PUSHI -8
+ADDI
+PUSHI 4
+ADDI
+LOADF
+STOREF
+JMP FinIf1
+
+Else1:
+PUSH BP
+PUSHI -24
+ADDI
+PUSHI 0
+ADDI
+PUSH BP
+PUSHI -8
+ADDI
+PUSHI 0
+ADDI
+LOADF
+STOREF
+PUSH BP
+PUSHI -24
+ADDI
+PUSHI 4
+ADDI
+PUSH BP
+PUSHI -8
+ADDI
+PUSHI 4
+ADDI
+LOADF
+STOREF
+
+FinIf1:
+PUSH BP
+PUSHI -26
+ADDI
+PUSH BP
+PUSHI -26
+ADDI
+LOADI
+PUSHI 1
+ADDI
+STOREI
+JMP While0
+
+FinWhile0:
+PUSHA 2
+PUSH BP
+PUSHI -16
+ADDI
+PUSHI 0
+ADDI
+LOADF
+PUSH BP
+PUSHI -24
+ADDI
+PUSHI 0
+ADDI
+LOADF
+MULF
+STOREF
+PUSH BP
+PUSHI -24
+ADDI
+PUSHI 4
+ADDI
+LOADF
+PUSHI 0
+I2F
+EQF
+JZ Else2
+PUSHA 6
+PUSHI -1
+I2F
+STOREF
+JMP FinIf2
+
+Else2:
+PUSHA 6
+PUSH BP
+PUSHI -16
+ADDI
+PUSHI 4
+ADDI
+LOADF
+PUSH BP
+PUSHI -24
+ADDI
+PUSHI 4
+ADDI
+LOADF
+DIVF
+STOREF
+
+FinIf2:
+PUSH BP
+PUSHI -30
+ADDI
+PUSH BP
+PUSHI -26
+ADDI
+LOADI
+I2F
+STOREF
+PUSH BP
+PUSHI -30
+ADDI
+LOADF
+PUSHA 6
+LOADF
+CALL MostrarDatos
+PUSHA 12
+PUSHI 3
+PUSHI 2
+MULI
+ADDI
+PUSHI 5
+STOREI
+PUSH BP
+PUSHI -31
+ADDI
+PUSH BP
+PUSHI -26
+ADDI
+LOADI
+I2B
+STOREB
+RET 0, 31, 0

@@ -1,0 +1,89 @@
+#
+- Las declaraciones de funciones, variables globales y tipos de usuario pueden venir en cualquier orden.
+- Si la funcion no tiene valor de retorno no se pone nada entre los parentesis de los parametros y las llaves de las sentencias
+- Las funciones deben tener parentesis aunque no tengan parametros
+- Una funcion podra declarar variables locales solo al inicio de su cuerpo. Por tanto no podra haber declaracion de variables locales en cualquier lugar de la funcion ni dentro de bloques anidados (por ejemplo el creado por un while)
+- No pueden aparecer expresiones como sentencias
+- Las llaves son obligatorias en el if/while aunque solo haya una sentencia dentro
+#
+
+var a:int;
+var b, c:real;
+
+var c:[20] int;
+var d:[30] real;
+
+type mapa:[10] int;
+var g:mapa;
+
+var h:[30][20] real;
+
+// -------------
+var e: record {
+	edad:int;
+	meses:[12] int;
+};
+
+type Persona: record {
+	edad:int;
+	meses:[12] int;
+};
+
+var e1:Persona;
+var e2:Persona;
+
+var f:[10] Persona;
+
+var k: [10] record {
+	b:int;
+	c:record {
+		d:int;
+	};
+	e:real;
+};
+
+type Empresa:record {
+	empleados:[25] Persona;
+	cif:[20] char;
+	
+};
+
+//------------------
+
+doble(a:int, b:int): real {
+	var local:int;
+	local = a + b;
+	return local * 2.0;
+}
+
+edad(p:Persona):real {
+	return p.edad;
+}
+
+escribeNumero(num:int) {
+	write ap[num].edad;
+}
+
+main() {
+  var local1: int;
+  var pepe, jose: Persona;
+  var local:int;
+
+  pepe.edad = 20;
+  read pepe.direccion.codigoPostal; 
+
+  local = 0;
+  while (local < 10) {	
+    a[local] = doble(cast<int>(2.0), local);
+    local = local + 1;
+  }
+
+  if (a >= 2) {
+    write edad(pepe); 
+  }
+
+  escribe(pepe.meses[2]);
+  write(pepe.meses[2]);
+}
+
+var z:int;
